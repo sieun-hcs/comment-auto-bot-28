@@ -1,45 +1,49 @@
+
 name: Comment on New Issues
 
 on:
   issues:
-    types: [opened]
+    types: [opened, labeled]
 
 jobs:
-  add-comment:
+  comment:
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
     steps:
       - name: Add comment for bug
         if: contains(github.event.issue.labels.*.name, 'bug')
         uses: actions/github-script@v6
         with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'Thank you. We will fix it. Best regards, sieun-hcs.'
+              body: 'Thank you. We will fix it. Best regards, ${{ github.repository_owner }}.'
             })
+
       - name: Add comment for feature
         if: contains(github.event.issue.labels.*.name, 'feature')
         uses: actions/github-script@v6
         with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'Thank you, we will consider to include this feature. Best regards, sieun-hcs.'
+              body: 'Thank you, we will consider to include this feature. Best regards, ${{ github.repository_owner }}.'
             })
+
       - name: Add comment for discussion
         if: contains(github.event.issue.labels.*.name, 'discussion')
         uses: actions/github-script@v6
         with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'Happy to discuss this topic with you. Best regards, sieun-hcs.'
+              body: 'Happy to discuss this topic with you. Best regards, ${{ github.repository_owner }}.'
             })
