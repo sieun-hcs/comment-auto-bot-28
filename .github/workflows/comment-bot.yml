@@ -10,9 +10,30 @@ jobs:
   comment:
     runs-on: ubuntu-latest
     steps:
-      - name: Create a test comment
+      - name: Comment on bug issue
+        if: contains(github.event.issue.labels.*.name, 'bug')
         uses: peter-evans/create-or-update-comment@v2
         with:
           issue-number: ${{ github.event.issue.number }}
-          body: This is a test comment from the simplified workflow.
-          token: ${{ secrets.GITHUB_TOKEN }}
+          body: Thank you. We will fix it. Best regards, sieun-hcs.
+
+      - name: Comment on feature issue
+        if: contains(github.event.issue.labels.*.name, 'feature')
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: Thank you, we will consider to include this feature. Best regards, sieun-hcs.
+
+      - name: Comment on discussion issue
+        if: contains(github.event.issue.labels.*.name, 'discussion')
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: Happy to discuss this topic with you. Best regards, sieun-hcs.
+
+      - name: Comment on unlabeled issue
+        if: github.event.issue.labels == '[]'
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: Hello, world!
